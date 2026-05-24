@@ -16,7 +16,7 @@ const CREAM     = '#F0F2F7';
 const WHITE     = '#FFFFFF';
 const RED       = '#C8362A';
 
-const font = opentype.loadSync(path.join(__dirname, 'raw/inter-600.ttf'));
+const font = opentype.loadSync(path.join(__dirname, 'raw/fraunces-600.ttf'));
 
 function makePath(text, fontSize, x = 0, y = 0, letterSpacing = 0) {
   const glyphs = font.stringToGlyphs(text);
