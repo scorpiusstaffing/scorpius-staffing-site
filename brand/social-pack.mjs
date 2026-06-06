@@ -1,7 +1,6 @@
 /**
  * Social media pack generator — Scorpius Staffing
- * Banners with profile-overlay zone are RIGHT-aligned (LinkedIn, X)
- * Standalone formats centered (IG, YouTube)
+ * Clean cream composition. No decorative graphics.
  */
 import { Resvg } from '@resvg/resvg-js';
 import fs from 'node:fs';
@@ -9,71 +8,114 @@ import path from 'node:path';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const NAVY      = '#1B2D45';
-const NAVY_DEEP = '#0F1B30';
-const CREAM     = '#F0F2F7';
-const RED       = '#C8362A';
+const NAVY     = '#1B2D45';
+const CREAM    = '#F0F2F7';
+const CREAM_DK = '#DCE0E9';
+const RED      = '#C8362A';
+const MUTED    = '#4A5566';
 
 const TAGLINE = 'INTERNATIONAL REC2REC';
-const SUBTAG  = 'DACH · UK · AUSTRALIA · DUBAI · SINGAPORE · HONG KONG · NYC';
+const DIRECTORY = 'DACH · UK · AUSTRALIA · DUBAI · SINGAPORE · HONG KONG · NYC';
 
 const wordmarkSvg = fs.readFileSync(path.join(__dirname, 'scorpius-staffing-wordmark.svg'), 'utf8');
 const m = wordmarkSvg.match(/<svg[^>]*viewBox="([^"]+)"[^>]*>([\s\S]*?)<\/svg>/);
 const [, vb, innerOriginal] = m;
 const [, , vw, vh] = vb.split(' ').map(Number);
-const innerLight = innerOriginal.replace(/fill="#1B2D45"/g, `fill="${CREAM}"`);
-const innerDark  = innerOriginal;
 
-/**
- * Composer with proper vertical centering of the content block.
- * align: 'left' | 'center' | 'right' — horizontal anchoring of the wordmark+tagline column
- * marginX: how far from the edge (left or right) the content sits
- */
-function compose({ width, height, bg, wordmarkW, align = 'center', marginX = 80, taglineSize, taglineGap = 28, subtagGap = 14, lightWordmark = true, tagline, subtag, taglineColor }) {
+function banner({ width, height, wordmarkW, centerX, taglineSize, headerSize, showDirectory = true, showFooter = true, showHeader = true }) {
   const scale = wordmarkW / vw;
   const wordmarkH = vh * scale;
-  const tagSize = taglineSize || Math.max(14, Math.round(width / 80));
-  const subSize = Math.max(11, Math.round(width / 130));
+  const tagSize = taglineSize || Math.max(15, Math.round(width / 75));
+  const hdrSize = headerSize  || Math.max(11, Math.round(width / 130));
+  const ftrSize = Math.max(10, Math.round(width / 140));
 
-  // Compute total content block height
-  let blockH = wordmarkH;
-  if (tagline) blockH += taglineGap + tagSize;
-  if (subtag)  blockH += subtagGap  + subSize;
-
-  // Vertical center the block
-  const blockTop = (height - blockH) / 2;
-  const wmY = blockTop;
-  const tagY = blockTop + wordmarkH + taglineGap + tagSize * 0.75;
-  const subY = blockTop + wordmarkH + taglineGap + tagSize + subtagGap + subSize * 0.75;
-
-  // Horizontal anchoring
-  let wmX, textX, textAnchor;
-  if (align === 'right') {
-    wmX = width - marginX - wordmarkW;
-    textX = width - marginX;
-    textAnchor = 'end';
-  } else if (align === 'left') {
-    wmX = marginX;
-    textX = marginX;
-    textAnchor = 'start';
-  } else {
-    wmX = (width - wordmarkW) / 2;
-    textX = width / 2;
-    textAnchor = 'middle';
-  }
-
-  const inner = lightWordmark ? innerLight : innerDark;
-  const tagColor = taglineColor || CREAM;
+  const wmX = centerX - wordmarkW / 2;
+  const wmY = (height - wordmarkH) / 2 - tagSize * 0.4;
+  const tagY = wmY + wordmarkH + tagSize * 2.0;
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
-  if (bg) svg += `<rect width="${width}" height="${height}" fill="${bg}"/>`;
-  svg += `<g transform="translate(${wmX}, ${wmY}) scale(${scale})">${inner}</g>`;
-  if (tagline) {
-    svg += `<text x="${textX}" y="${tagY}" font-family="Inter, Helvetica, sans-serif" font-size="${tagSize}" font-weight="500" fill="${tagColor}" opacity="0.7" letter-spacing="3" text-anchor="${textAnchor}">${tagline}</text>`;
+  svg += `<defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${CREAM_DK}"/>
+      <stop offset="60%" stop-color="${CREAM}"/>
+      <stop offset="100%" stop-color="${CREAM}"/>
+    </linearGradient>
+  </defs>`;
+  svg += `<rect width="${width}" height="${height}" fill="url(#bg)"/>`;
+
+  svg += `<g transform="translate(${wmX}, ${wmY}) scale(${scale})">${innerOriginal}</g>`;
+
+  svg += `<text x="${centerX}" y="${tagY}" font-family="Inter, Helvetica, sans-serif" font-size="${tagSize}" font-weight="500" fill="${NAVY}" opacity="0.65" letter-spacing="5" text-anchor="middle">${TAGLINE}</text>`;
+
+  if (showHeader) {
+    const hdrX = width - Math.round(width * 0.025);
+    const hdrY = Math.round(height * 0.22);
+    svg += `<text x="${hdrX}" y="${hdrY}" font-family="JetBrains Mono, Menlo, monospace" font-size="${hdrSize}" font-weight="500" fill="${NAVY}" letter-spacing="2.5" opacity="0.65" text-anchor="end">EST. 2022</text>`;
   }
-  if (subtag) {
-    svg += `<text x="${textX}" y="${subY}" font-family="Inter, Helvetica, sans-serif" font-size="${subSize}" font-weight="400" fill="${tagColor}" opacity="0.5" letter-spacing="2" text-anchor="${textAnchor}">${subtag}</text>`;
+
+  if (showDirectory) {
+    const dirY = height - Math.round(height * 0.13);
+    const dirSize = Math.max(11, Math.round(width / 140));
+    svg += `<text x="${centerX}" y="${dirY}" font-family="JetBrains Mono, Menlo, monospace" font-size="${dirSize}" font-weight="500" fill="${NAVY}" opacity="0.6" letter-spacing="2" text-anchor="middle">${DIRECTORY}</text>`;
   }
+
+  if (showFooter) {
+    const ftrX = width - Math.round(width * 0.025);
+    const ftrY = height - Math.round(height * 0.13);
+    svg += `<text x="${ftrX}" y="${ftrY}" font-family="JetBrains Mono, Menlo, monospace" font-size="${ftrSize}" font-weight="400" fill="${NAVY}" opacity="0.45" letter-spacing="1.5" text-anchor="end">SCORPIUSSTAFFING.COM</text>`;
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+function centered({ width, height, wordmarkW, taglineSize }) {
+  const scale = wordmarkW / vw;
+  const wordmarkH = vh * scale;
+  const tagSize = taglineSize || Math.max(18, Math.round(width / 60));
+  const subS    = Math.max(12, Math.round(width / 90));
+
+  const wmX = (width - wordmarkW) / 2;
+  const wmY = (height - wordmarkH) / 2 - tagSize * 0.4;
+  const tagY = wmY + wordmarkH + tagSize * 1.8;
+  const dirY = tagY + subS * 2.4;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
+  svg += `<defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${CREAM}"/>
+      <stop offset="100%" stop-color="${CREAM_DK}"/>
+    </linearGradient>
+  </defs>`;
+  svg += `<rect width="${width}" height="${height}" fill="url(#bg)"/>`;
+
+  const hdrSize = Math.max(11, Math.round(width / 90));
+  svg += `<text x="${width/2}" y="${Math.round(height * 0.10)}" font-family="JetBrains Mono, Menlo, monospace" font-size="${hdrSize}" font-weight="500" fill="${NAVY}" letter-spacing="3" text-anchor="middle" opacity="0.65">EST. 2022</text>`;
+
+  svg += `<g transform="translate(${wmX}, ${wmY}) scale(${scale})">${innerOriginal}</g>`;
+
+  svg += `<text x="${width/2}" y="${tagY}" font-family="Inter, Helvetica, sans-serif" font-size="${tagSize}" font-weight="500" fill="${NAVY}" opacity="0.7" letter-spacing="5" text-anchor="middle">${TAGLINE}</text>`;
+
+  svg += `<text x="${width/2}" y="${dirY}" font-family="JetBrains Mono, Menlo, monospace" font-size="${subS}" font-weight="500" fill="${NAVY}" opacity="0.6" letter-spacing="2" text-anchor="middle">${DIRECTORY}</text>`;
+
+  const ftrSize = Math.max(10, Math.round(width / 100));
+  svg += `<text x="${width/2}" y="${height - Math.round(height * 0.07)}" font-family="JetBrains Mono, Menlo, monospace" font-size="${ftrSize}" font-weight="400" fill="${NAVY}" opacity="0.45" letter-spacing="2" text-anchor="middle">SCORPIUSSTAFFING.COM</text>`;
+
+  svg += '</svg>';
+  return svg;
+}
+
+function emailSig({ width, height }) {
+  const wordmarkW = 360;
+  const scale = wordmarkW / vw;
+  const wordmarkH = vh * scale;
+  const tagSize = 13;
+  const blockH = wordmarkH + tagSize + 12;
+  const blockTop = (height - blockH) / 2;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
+  svg += `<g transform="translate(0, ${blockTop}) scale(${scale})">${innerOriginal}</g>`;
+  svg += `<text x="0" y="${blockTop + wordmarkH + 16}" font-family="Inter, Helvetica, sans-serif" font-size="${tagSize}" font-weight="500" fill="${MUTED}" letter-spacing="2">${TAGLINE}</text>`;
   svg += '</svg>';
   return svg;
 }
@@ -87,54 +129,12 @@ function render(svg, outPath) {
 const outDir = 'png/social';
 fs.mkdirSync(path.join(__dirname, outDir), { recursive: true });
 
-/* LinkedIn company banner 1584x396 — content RIGHT-aligned (left half = company logo overlay zone) */
-render(compose({
-  width: 1584, height: 396, bg: NAVY_DEEP,
-  wordmarkW: 600, align: 'right', marginX: 100,
-  tagline: TAGLINE, subtag: SUBTAG
-}), `${outDir}/linkedin-banner-1584x396.png`);
-
-/* LinkedIn personal banner 1128x191 — RIGHT-aligned (profile pic overlay bottom-left) */
-render(compose({
-  width: 1128, height: 191, bg: NAVY_DEEP,
-  wordmarkW: 380, align: 'right', marginX: 70,
-  tagline: TAGLINE, taglineGap: 18
-}), `${outDir}/linkedin-personal-banner-1128x191.png`);
-
-/* X / Twitter header 1500x500 — RIGHT-aligned (profile pic bottom-left) */
-render(compose({
-  width: 1500, height: 500, bg: NAVY_DEEP,
-  wordmarkW: 600, align: 'right', marginX: 100,
-  tagline: TAGLINE, subtag: SUBTAG
-}), `${outDir}/x-header-1500x500.png`);
-
-/* Instagram square post 1080x1080 — centered */
-render(compose({
-  width: 1080, height: 1080, bg: NAVY_DEEP,
-  wordmarkW: 750, align: 'center',
-  tagline: TAGLINE, subtag: SUBTAG, taglineGap: 50, subtagGap: 18
-}), `${outDir}/instagram-post-1080x1080.png`);
-
-/* Instagram story 1080x1920 — centered */
-render(compose({
-  width: 1080, height: 1920, bg: NAVY_DEEP,
-  wordmarkW: 800, align: 'center',
-  tagline: TAGLINE, subtag: SUBTAG, taglineGap: 70, subtagGap: 22
-}), `${outDir}/instagram-story-1080x1920.png`);
-
-/* YouTube banner 2560x1440 — centered (safe area is center 1235x338) */
-render(compose({
-  width: 2560, height: 1440, bg: NAVY_DEEP,
-  wordmarkW: 1000, align: 'center',
-  tagline: TAGLINE, subtag: SUBTAG, taglineGap: 80, subtagGap: 26
-}), `${outDir}/youtube-banner-2560x1440.png`);
-
-/* Email signature 600x150 — left-aligned, transparent */
-render(compose({
-  width: 600, height: 150, bg: null,
-  wordmarkW: 380, align: 'left', marginX: 0,
-  lightWordmark: false,
-  tagline: TAGLINE, taglineGap: 16, taglineColor: '#4A5566'
-}), `${outDir}/email-signature-transparent.png`);
+render(banner({ width: 1584, height: 396, wordmarkW: 520, centerX: 1100 }), `${outDir}/linkedin-banner-1584x396.png`);
+render(banner({ width: 1584, height: 396, wordmarkW: 520, centerX: 1100, showDirectory: false, showFooter: false }), `${outDir}/linkedin-personal-banner-1584x396.png`);
+render(banner({ width: 1500, height: 500, wordmarkW: 540, centerX: 1050 }), `${outDir}/x-header-1500x500.png`);
+render(centered({ width: 1080, height: 1080, wordmarkW: 720 }), `${outDir}/instagram-post-1080x1080.png`);
+render(centered({ width: 1080, height: 1920, wordmarkW: 760 }), `${outDir}/instagram-story-1080x1920.png`);
+render(centered({ width: 2560, height: 1440, wordmarkW: 1000 }), `${outDir}/youtube-banner-2560x1440.png`);
+render(emailSig({ width: 600, height: 150 }), `${outDir}/email-signature-transparent.png`);
 
 console.log('\n✓ Scorpius Staffing social pack done.');

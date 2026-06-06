@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Email signature · Jonathan de Klerk · Scorpius Staffing</title>
+<meta name="robots" content="noindex" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --navy:      #1B2D45;
+    --navy-deep: #0F1B30;
+    --muted:     #4A5566;
+    --line:      #DCE1EA;
+    --bg:        #F2F5FA;
+    --paper:     #FFFFFF;
+    --red:       #C8362A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--navy);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    padding: 3rem 1.5rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
+
+  .doc-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .doc-head strong { color: var(--navy); }
+
+  .card { background: var(--paper); border: 1px solid var(--line); padding: 0; }
+
+  .card-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: #F8FAFD;
+  }
+  .card-bar .pill {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--navy);
+    color: var(--paper);
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .card-body { padding: 38px 40px 42px; }
+
+  .copy-zone { user-select: all; }
+
+  /* === A — Default vertical === */
+  .sig-a {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    color: #1B2D45;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .sig-a img.logo { display: block; width: 220px; height: auto; margin: 0 0 18px; }
+  .sig-a .name { font-weight: 600; font-size: 15px; color: #1B2D45; letter-spacing: -0.005em; }
+  .sig-a .title {
+    margin-top: 4px;
+    color: #4A5566;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+  .sig-a .lines { margin-top: 16px; font-size: 13px; }
+  .sig-a .lines .phone { color: #4A5566; }
+  .sig-a .sub {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #DCE1EA;
+    font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    font-size: 10px;
+    color: #6B7689;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* === B — Two-column === */
+  .sig-b {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    color: #1B2D45;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .sig-b table { border-collapse: collapse; border: 0; }
+  .sig-b td { vertical-align: top; padding: 0; }
+  .sig-b .left {
+    padding-right: 22px;
+    border-right: 1px solid #DCE1EA;
+    width: 200px;
+  }
+  .sig-b .left img { display: block; width: 180px; height: auto; }
+  .sig-b .right { padding-left: 22px; }
+  .sig-b .name { font-weight: 600; font-size: 15px; color: #1B2D45; letter-spacing: -0.005em; }
+  .sig-b .title {
+    margin-top: 3px;
+    color: #4A5566;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+  .sig-b .lines { margin-top: 14px; font-size: 13px; }
+  .sig-b .lines .phone { color: #4A5566; }
+  .sig-b .sub {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    font-size: 10px;
+    color: #6B7689;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* === C — Minimal text === */
+  .sig-c {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    color: #1B2D45;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .sig-c .name { font-weight: 600; font-size: 14px; color: #1B2D45; letter-spacing: -0.005em; }
+  .sig-c .title {
+    margin-top: 3px;
+    color: #4A5566;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+  }
+  .sig-c .dot { color: #C8362A; }
+  .sig-c .lines { margin-top: 14px; font-size: 13px; }
+  .sig-c .lines .phone { color: #4A5566; }
+  .sig-c .sub {
+    margin-top: 14px;
+    color: #6B7689;
+    font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .howto {
+    padding: 26px 30px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .howto h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+  .howto ol { padding-left: 22px; color: var(--navy); }
+  .howto ol li { margin-bottom: 6px; }
+  .howto kbd {
+    display: inline-block;
+    padding: 1px 7px;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: #F8FAFD;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="doc-head">
+    <strong>Email signature</strong> &nbsp;·&nbsp; Jonathan de Klerk &nbsp;·&nbsp; Scorpius Staffing
+  </div>
+
+  <!-- A — DEFAULT (logo on top, vertical) -->
+  <div class="card">
+    <div class="card-bar">
+      <span><span class="pill">A</span> &nbsp; Default · vertical with wordmark</span>
+      <span>Recommended</span>
+    </div>
+    <div class="card-body">
+      <div class="copy-zone">
+        <div class="sig-a">
+          <img class="logo" src="https://www.scorpiusstaffing.com/brand/png/scorpius-staffing-wordmark-2000.png" alt="Scorpius Staffing" />
+          <div class="name">Jonathan de Klerk</div>
+          <div class="title">Managing Partner &middot; Scorpius Staffing</div>
+          <div class="lines">
+            <a href="mailto:jonathandeklerk@scorpiusstaffing.com" style="color:#1B2D45;text-decoration:none;"><span style="color:#1B2D45;text-decoration:none;">jonathandeklerk@scorpiusstaffing.com</span></a><br>
+            <a href="https://scorpiusstaffing.com" style="color:#4A5566;text-decoration:none;"><span style="color:#4A5566;text-decoration:none;">scorpiusstaffing.com</span></a><br>
+            <span class="phone">+31 6 14579738</span>
+          </div>
+          <div class="sub">DACH &nbsp;&middot;&nbsp; UK &nbsp;&middot;&nbsp; Australia &nbsp;&middot;&nbsp; Dubai &nbsp;&middot;&nbsp; Singapore &nbsp;&middot;&nbsp; Hong Kong &nbsp;&middot;&nbsp; NYC</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B — TWO-COLUMN compact -->
+  <div class="card">
+    <div class="card-bar">
+      <span><span class="pill">B</span> &nbsp; Two-column · compact with vertical divider</span>
+    </div>
+    <div class="card-body">
+      <div class="copy-zone">
+        <div class="sig-b">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="left">
+                <img src="https://www.scorpiusstaffing.com/brand/png/scorpius-staffing-wordmark-2000.png" alt="Scorpius Staffing" />
+              </td>
+              <td class="right">
+                <div class="name">Jonathan de Klerk</div>
+                <div class="title">Managing Partner &middot; Scorpius Staffing</div>
+                <div class="lines">
+                  <a href="mailto:jonathandeklerk@scorpiusstaffing.com" style="color:#1B2D45;text-decoration:none;"><span style="color:#1B2D45;text-decoration:none;">jonathandeklerk@scorpiusstaffing.com</span></a><br>
+                  <a href="https://scorpiusstaffing.com" style="color:#4A5566;text-decoration:none;"><span style="color:#4A5566;text-decoration:none;">scorpiusstaffing.com</span></a><br>
+                  <span class="phone">+31 6 14579738</span>
+                </div>
+                <div class="sub">DACH &middot; UK &middot; AU &middot; UAE &middot; SG &middot; HK &middot; NYC</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C — MINIMAL text-only -->
+  <div class="card">
+    <div class="card-bar">
+      <span><span class="pill">C</span> &nbsp; Minimal · text only (no image — survives every mail client)</span>
+    </div>
+    <div class="card-body">
+      <div class="copy-zone">
+        <div class="sig-c">
+          <div class="name">Jonathan de Klerk</div>
+          <div class="title">Managing Partner &middot; Scorpius Staffing<span class="dot">.</span></div>
+          <div class="lines">
+            <a href="mailto:jonathandeklerk@scorpiusstaffing.com" style="color:#1B2D45;text-decoration:none;"><span style="color:#1B2D45;text-decoration:none;">jonathandeklerk@scorpiusstaffing.com</span></a><br>
+            <a href="https://scorpiusstaffing.com" style="color:#4A5566;text-decoration:none;"><span style="color:#4A5566;text-decoration:none;">scorpiusstaffing.com</span></a><br>
+            <span class="phone">+31 6 14579738</span>
+          </div>
+          <div class="sub">DACH &nbsp;&middot;&nbsp; UK &nbsp;&middot;&nbsp; Australia &nbsp;&middot;&nbsp; Dubai &nbsp;&middot;&nbsp; Singapore &nbsp;&middot;&nbsp; Hong Kong &nbsp;&middot;&nbsp; NYC</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO -->
+  <div class="howto">
+    <h3>How to install in Gmail</h3>
+    <ol>
+      <li>Click ONCE inside the signature you want above (anywhere inside the white box).</li>
+      <li>Press <kbd>Cmd</kbd> + <kbd>A</kbd> to select the signature (only the copy-zone is selectable), then <kbd>Cmd</kbd> + <kbd>C</kbd>.</li>
+      <li>Open Gmail → ⚙️ → <strong>See all settings</strong> → <strong>General</strong> tab → scroll to <strong>Signature</strong>.</li>
+      <li>Click <strong>+ Create new</strong> (name it "Scorpius Staffing"), or click into an existing one.</li>
+      <li>Paste with <kbd>Cmd</kbd> + <kbd>V</kbd>. Logo, fonts, colors and links all carry over.</li>
+      <li>Under <strong>Signature defaults</strong>, set "For new emails use" and "On reply/forward use" to this signature for <strong>jonathandeklerk@scorpiusstaffing.com</strong>.</li>
+      <li>Scroll to the bottom and click <strong>Save changes</strong>.</li>
+    </ol>
+  </div>
+
+</div>
+
+</body>
+</html>
